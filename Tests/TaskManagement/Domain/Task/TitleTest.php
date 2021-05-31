@@ -16,4 +16,10 @@ class TitleTest extends \PHPUnit\Framework\TestCase
         \TaskManagement\Domain\Task\Title::fromString("");
     }
 
+    public function test_title_must_be_created_via_named_constructor()
+    {
+        $this->expectException(\Error::class);
+        $user = new \TaskManagement\Domain\Task\Title("test");
+    }
+
 }
