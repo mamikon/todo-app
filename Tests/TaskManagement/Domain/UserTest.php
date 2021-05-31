@@ -15,4 +15,10 @@ class UserTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\Error::class);
         $user = new \TaskManagement\Domain\User("test");
     }
+
+    public function test_if_invalid_uuid_provided_for_user_must_throw_exception()
+    {
+        $this->expectException(\TaskManagement\Domain\Exception\InvalidUuidException::class);
+        $user = \TaskManagement\Domain\User::fromString("invalid-uuid");
+    }
 }
