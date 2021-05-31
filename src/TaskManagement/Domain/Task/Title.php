@@ -8,7 +8,7 @@ use TaskManagement\Domain\Task\Exception\EmptyArgumentException;
 
 class Title
 {
-    public function __construct(private string $title)
+    private function __construct(private string $title)
     {
 
     }
