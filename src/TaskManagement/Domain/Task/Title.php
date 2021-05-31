@@ -13,6 +13,9 @@ class Title
 
     }
 
+    /**
+     * @throws EmptyArgumentException
+     */
     public static function fromString(string $titleString): self
     {
         if ($titleString === "") {
