@@ -6,7 +6,7 @@ namespace TaskManagement\Domain\Task;
 
 class Description
 {
-    public function __construct(private string $description)
+    private function __construct(private string $description)
     {
     }
 
