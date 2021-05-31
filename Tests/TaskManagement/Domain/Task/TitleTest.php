@@ -10,4 +10,10 @@ class TitleTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($titleString, $title->toString());
     }
 
+    public function test_that_empty_title_will_throw_exception()
+    {
+        $this->expectException(\TaskManagement\Domain\Task\Exception\EmptyArgumentException::class);
+        \TaskManagement\Domain\Task\Title::fromString("");
+    }
+
 }
