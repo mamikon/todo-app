@@ -6,7 +6,7 @@ namespace TaskManagement\Domain;
 
 class User
 {
-    public function __construct(private string $id)
+    private function __construct(private string $id)
     {
 
     }
