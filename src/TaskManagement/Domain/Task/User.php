@@ -1,11 +1,11 @@
 <?php
 
 
-namespace TaskManagement\Domain;
+namespace TaskManagement\Domain\Task;
 
 
 use Ramsey\Uuid\Nonstandard\Uuid;
-use TaskManagement\Domain\Exception\InvalidUuidException;
+use TaskManagement\Domain\Task\Exception\InvalidUuidException;
 
 class User
 {

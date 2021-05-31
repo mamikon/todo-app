@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TaskManagement\Domain;
+namespace TaskManagement\Domain\Task;
 
 
 use Ramsey\Uuid\Uuid;

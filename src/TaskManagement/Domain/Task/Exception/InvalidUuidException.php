@@ -1,7 +1,7 @@
 <?php
 
 
-namespace TaskManagement\Domain\Exception;
+namespace TaskManagement\Domain\Task\Exception;
 
 
 class InvalidUuidException extends \RuntimeException
