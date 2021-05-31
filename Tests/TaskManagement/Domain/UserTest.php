@@ -9,4 +9,10 @@ class UserTest extends \PHPUnit\Framework\TestCase
         $user = \TaskManagement\Domain\User::fromString($uuid);
         $this->assertSame($user->toString(), $uuid);
     }
+
+    public function test_user_can_be_created_true_named_constructor()
+    {
+        $this->expectException(\Error::class);
+        $user = new \TaskManagement\Domain\User("test");
+    }
 }
