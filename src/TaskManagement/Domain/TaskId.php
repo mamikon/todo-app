@@ -8,7 +8,7 @@ use Ramsey\Uuid\Uuid;
 
 class TaskId
 {
-    public function __construct(private string $id)
+    private function __construct(private string $id)
     {
 
     }
