@@ -12,9 +12,14 @@
         "phpunit/phpunit": "^9.5"
     },
     "autoload": {
-        "psr-4": { "TaskManagement\\": "src/TaskManagement" },
+        "psr-4": {
+            "TaskManagement\\": "src/TaskManagement"
+        },
         "exclude-from-classmap": [
             "/Tests/"
         ]
+    },
+    "require": {
+        "ramsey/uuid": "^4.1"
     }
 }
