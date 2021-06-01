@@ -26,22 +26,13 @@ class StatusTest extends TestCase
         $status = \TaskManagement\Domain\Task\Status::fromInt($randomInt);
     }
 
-    public function test_task_status_change_is_immutable()
-    {
-        $status    = \TaskManagement\Domain\Task\Status::fromInt(Status::DRAFT);
-        $newStatus = $status->change(Status::INCOMPLETE);
-        $this->assertNotSame($status->getValue(), $newStatus->getValue());
-        $this->assertSame(Status::DRAFT, $status->getValue());
-        $this->assertSame(Status::INCOMPLETE, $newStatus->getValue());
 
-    }
-
-    public function test_change_status_must_not_be_allowed_from_completed_to_draft()
+    public function test_status_can_validate_change()
     {
         $status      = \TaskManagement\Domain\Task\Status::fromInt(Status::COMPLETED);
         $draftStatus = \TaskManagement\Domain\Task\Status::fromInt(Status::DRAFT);
         $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidTaskStatusException::class);
-        $status->change($draftStatus);
+        $status->check($draftStatus);
     }
 
     public function test_status_must_be_created_via_named_constructor()
