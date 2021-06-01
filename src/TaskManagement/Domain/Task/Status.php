@@ -15,6 +15,10 @@ class Status
 
     private static array $availableStatuses = [self::INCOMPLETE, self::COMPLETED, self::DRAFT];
 
+    private static array $statusRestrictions = [
+        self::DRAFT => [self::COMPLETED, self::INCOMPLETE],
+    ];
+
     public function __construct(private int $status)
     {
 
@@ -30,7 +34,8 @@ class Status
                 sprintf(
                     "Provided status(%d) is invalid. Available statuses are %s",
                     $status,
-                    implode(",", self::$availableStatuses))
+                    implode(",", self::$availableStatuses)
+                )
             );
         }
 
@@ -44,6 +49,16 @@ class Status
 
     public function change(int $status): self
     {
+        if (isset(self::$statusRestrictions[$status]) && in_array($this->status, self::$statusRestrictions[$status])) {
+            throw new InvalidTaskStatusException(
+                sprintf(
+                    "Status can't be changed from %d to %d.",
+                    $this->status,
+                    $status
+                )
+            );
+        }
+
         return self::fromInt($status);
     }
 
