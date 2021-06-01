@@ -72,4 +72,26 @@ class TaskTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($task->getStatus()->getValue(), $statusUpdated->getValue());
         $this->assertSame($task->getDate()->toString("m-d-Y H:i:s.u"), $dateUpdated->toString("m-d-Y H:i:s.u"));
     }
+
+    public function test_status_change_is_validated()
+    {
+        $taskId        = \TaskManagement\Domain\Task\TaskId::generate();
+        $user          = \TaskManagement\Domain\Task\User::fromString(\Ramsey\Uuid\Uuid::uuid4());
+        $title         = \TaskManagement\Domain\Task\Title::fromString("title");
+        $description   = \TaskManagement\Domain\Task\Description::fromString("Description");
+        $status        = \TaskManagement\Domain\Task\Status::fromInt(\TaskManagement\Domain\Task\Status::COMPLETED);
+        $date          = \TaskManagement\Domain\Task\Date::create(new DateTimeImmutable());
+        $task          = \TaskManagement\Domain\Task\Task::create(
+            taskId: $taskId,
+            user: $user,
+            title: $title,
+            description: $description,
+            status: $status,
+            date: $date
+        );
+        $statusUpdated = \TaskManagement\Domain\Task\Status::fromInt(\TaskManagement\Domain\Task\Status::DRAFT);
+
+        $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidTaskStatusException::class);
+        $task->setStatus($statusUpdated);
+    }
 }
