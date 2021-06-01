@@ -37,4 +37,11 @@ class InMemoryRepository implements TaskRepository
         }
         return $list;
     }
+
+    public function update(Task $task): void
+    {
+        if (isset($this->tasks[$task->getTaskId()->toString()])) {
+            $this->tasks[$task->getTaskId()->toString()] = $task;
+        }
+    }
 }

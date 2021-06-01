@@ -70,4 +70,48 @@ class TaskServiceTest extends \PHPUnit\Framework\TestCase
         $task = $usersTasks[0];
         $this->assertSame($task->getTaskId()->toString(), $taskId->toString());
     }
+
+    public function test_entity_can_be_updated()
+    {
+        require_once(__DIR__ . '/stubs/InMemoryRepository.php');
+        $repository  = new \TaskManagement\Domain\Task\stubs\InMemoryRepository();
+        $taskService = new \TaskManagement\Domain\Task\TaskService($repository);
+        $taskId      = \TaskManagement\Domain\Task\TaskId::generate();
+        $user        = \TaskManagement\Domain\Task\User::fromString(\Ramsey\Uuid\Uuid::uuid4());
+        $title       = \TaskManagement\Domain\Task\Title::fromString("title");
+        $description = \TaskManagement\Domain\Task\Description::fromString("Description");
+        $status      = \TaskManagement\Domain\Task\Status::fromInt(\TaskManagement\Domain\Task\Status::DRAFT);
+        $date        = \TaskManagement\Domain\Task\Date::create(new DateTimeImmutable());
+
+        $task = \TaskManagement\Domain\Task\Task::create(
+            taskId: $taskId,
+            user: $user,
+            title: $title,
+            description: $description,
+            status: $status,
+            date: $date
+        );
+        $taskService->store($task);
+
+        $userNew        = \TaskManagement\Domain\Task\User::fromString(\Ramsey\Uuid\Uuid::uuid4());
+        $titleNew       = \TaskManagement\Domain\Task\Title::fromString("title");
+        $descriptionNew = \TaskManagement\Domain\Task\Description::fromString("Description");
+        $statusNew      = \TaskManagement\Domain\Task\Status::fromInt(\TaskManagement\Domain\Task\Status::DRAFT);
+        $dateNew        = \TaskManagement\Domain\Task\Date::create(new DateTimeImmutable('2000-02-10 16:00:00'));
+
+        $task->setStatus($statusNew);
+        $task->setDate($dateNew);
+        $task->setTitle($titleNew);
+        $task->setDescription($descriptionNew);
+        $task->setUser($userNew);
+        $taskService->update($task);
+        $updatedTask = $taskService->getById($taskId);
+        $this->assertSame($updatedTask->getUser()->toString(), $userNew->toString());
+        $this->assertSame($updatedTask->getTitle()->toString(), $titleNew->toString());
+        $this->assertSame($updatedTask->getDescription()->toString(), $descriptionNew->toString());
+        $this->assertSame($updatedTask->getStatus()->getValue(), $statusNew->getValue());
+        $this->assertSame($updatedTask->getDate()->toString("m-d-Y H:i:s.u"), $dateNew->toString("m-d-Y H:i:s.u"));
+
+
+    }
 }
