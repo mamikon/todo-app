@@ -22,13 +22,20 @@ class TaskUpdateHandler
 
     public function __invoke(TaskUpdateCommand $command)
     {
+        $task        = $this->taskService->getById(TaskId::fromString($command->getTaskId()));
+        $status      = $command->getStatus() !== null ? Status::fromInt($command->getStatus()) : $task->getStatus();
+        $user        = $command->getUser() !== null ? User::fromString($command->getUser()) : $task->getUser();
+        $title       = $command->getTitle() !== null ? Title::fromString($command->getTitle()) : $task->getTitle();
+        $date        = $command->getDate() !== null ? Date::create($command->getDate()) : $task->getDate();
+        $description = $command->getDescription() !== null ? Description::fromString($command->getDescription()) : $task->getDescription();
+
         $task = Task::create(
-            taskId: TaskId::fromString($command->getTaskId()),
-            user: User::fromString($command->getUser()),
-            title: Title::fromString($command->getTitle()),
-            description: Description::fromString($command->getDescription()),
-            status: Status::fromInt($command->getStatus()),
-            date: Date::create($command->getDate())
+            taskId: $task->getTaskId(),
+            user: $user,
+            title: $title,
+            description: $description,
+            status: $status,
+            date: $date
         );
         $this->taskService->update($task);
     }
