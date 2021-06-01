@@ -43,4 +43,11 @@ class StatusTest extends TestCase
         $status->change(Status::DRAFT);
     }
 
+    public function test_status_must_be_created_via_named_constructor()
+    {
+        $statusArray = \TaskManagement\Domain\Task\Status::getAvailableStatuses();
+        $this->expectException(\Error::class);
+        $status = new Status(current($statusArray));
+    }
+
 }
