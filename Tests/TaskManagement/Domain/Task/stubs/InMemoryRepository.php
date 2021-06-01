@@ -27,6 +27,9 @@ class InMemoryRepository implements TaskRepository
         return $this->tasks[$taskId->toString()];
     }
 
+    /**
+     * @return Task[]
+     */
     public function getUserTasksForGivenDate(User $user, Date $date): array
     {
         $list = [];
