@@ -4,9 +4,11 @@
 namespace TaskManagement\Domain\Task\stubs;
 
 
+use TaskManagement\Domain\Task\Date;
 use TaskManagement\Domain\Task\Task;
 use TaskManagement\Domain\Task\TaskId;
 use TaskManagement\Domain\Task\TaskRepository;
+use TaskManagement\Domain\Task\User;
 
 class InMemoryRepository implements TaskRepository
 {
@@ -23,5 +25,16 @@ class InMemoryRepository implements TaskRepository
     public function getById(TaskId $taskId): Task
     {
         return $this->tasks[$taskId->toString()];
+    }
+
+    public function getUsersTaskForGivenDate(User $user, Date $date): array
+    {
+        $list = [];
+        foreach ($this->tasks as $task) {
+            if ($task->getDate()->toString() === $date->toString() && $task->getUser()->toString() === $user->toString()) {
+                $list[] = $task;
+            }
+        }
+        return $list;
     }
 }
