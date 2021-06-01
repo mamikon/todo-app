@@ -56,4 +56,32 @@ class Task
     {
         return $this->date;
     }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function setTitle(Title $title): void
+    {
+        $this->title = $title;
+    }
+
+
+    public function setStatus(Status $status): void
+    {
+        $this->status = $status;
+    }
+
+
+    public function setDescription(Description $description): void
+    {
+        $this->description = $description;
+    }
+
+
+    public function setDate(Date $date): void
+    {
+        $this->date = $date;
+    }
 }
