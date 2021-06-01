@@ -70,6 +70,7 @@ class Task
 
     public function setStatus(Status $status): void
     {
+        $this->status->check($status);
         $this->status = $status;
     }
 
