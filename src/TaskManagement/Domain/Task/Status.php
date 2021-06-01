@@ -47,19 +47,17 @@ class Status
         return self::$availableStatuses;
     }
 
-    public function change(int $status): self
+    public function check(Status $status): void
     {
-        if (isset(self::$statusRestrictions[$status]) && in_array($this->status, self::$statusRestrictions[$status])) {
+        if (isset(self::$statusRestrictions[$status->getValue()]) && in_array($this->status, self::$statusRestrictions[$status->getValue()])) {
             throw new InvalidTaskStatusException(
                 sprintf(
                     "Status can't be changed from %d to %d.",
                     $this->status,
-                    $status
+                    $status->getValue()
                 )
             );
         }
-
-        return self::fromInt($status);
     }
 
     public function getValue(): int
