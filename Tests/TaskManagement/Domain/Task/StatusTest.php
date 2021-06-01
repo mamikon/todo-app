@@ -22,7 +22,9 @@ class StatusTest extends TestCase
         while (in_array($randomInt, $statusArray)) {
             $randomInt++;
         }
-        $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidTaskStatusProvided::class);
+        $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidTaskStatusException::class);
         $status = \TaskManagement\Domain\Task\Status::fromInt($randomInt);
     }
+
+
 }
