@@ -66,4 +66,37 @@ class TaskUpdateCommandTest extends \PHPUnit\Framework\TestCase
         $this->assertNotSame($updatedTask->getUser()->toString(), $task->getUser()->toString());
         $this->assertNotSame($updatedTask->getStatus()->getValue(), $task->getStatus()->getValue());
     }
+
+    public function test_task_update_handler_can_process_only_required_updates()
+    {
+        require_once(__DIR__ . '/../../../Domain/Task/stubs/InMemoryRepository.php');
+        $repository  = new \TaskManagement\Domain\Task\stubs\InMemoryRepository();
+        $taskService = new \TaskManagement\Domain\Task\TaskService($repository);
+        require_once(__DIR__ . '/../../../Domain/Task/stubs/InMemoryRepository.php');
+        $repository  = new \TaskManagement\Domain\Task\stubs\InMemoryRepository();
+        $taskService = new \TaskManagement\Domain\Task\TaskService($repository);
+        $handler     = new \TaskManagement\Application\Command\Task\TaskUpdateHandler($taskService);
+        $taskId      = TaskId::generate();
+        $task        = Task::create(
+            taskId: $taskId,
+            user: User::fromString(\Ramsey\Uuid\Uuid::uuid4()),
+            title: Title::fromString("title"),
+            description: Description::fromString("description"),
+            status: Status::fromInt(Status::INCOMPLETE),
+            date: Date::create(new DateTimeImmutable())
+        );
+        $taskService->store($task);
+        $command = new \TaskManagement\Application\Command\Task\TaskUpdateCommand(
+            taskId: $taskId->toString(),
+            status: \TaskManagement\Domain\Task\Status::COMPLETED
+        );
+        $handler($command);
+        $updatedTask = $taskService->getById($taskId);
+        $this->assertSame($updatedTask->getTaskId()->toString(), $task->getTaskId()->toString());
+        $this->assertSame($updatedTask->getDate()->toString(), $task->getDate()->toString());
+        $this->assertSame($updatedTask->getTitle()->toString(), $task->getTitle()->toString());
+        $this->assertSame($updatedTask->getDescription()->toString(), $task->getDescription()->toString());
+        $this->assertSame($updatedTask->getUser()->toString(), $task->getUser()->toString());
+        $this->assertNotSame($updatedTask->getStatus()->getValue(), $task->getStatus()->getValue());
+    }
 }
