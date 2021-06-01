@@ -16,4 +16,10 @@ class TaskIdTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\Error::class);
         $taskId = new TaskId("test");
     }
+
+    public function test_if_wrong_uuid_provided_it_will_throw_exception()
+    {
+        $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidUuidException::class);
+        $taskId = \TaskManagement\Domain\Task\TaskId::fromString("invalid");
+    }
 }
