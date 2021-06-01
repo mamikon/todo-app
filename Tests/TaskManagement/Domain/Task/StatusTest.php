@@ -36,5 +36,11 @@ class StatusTest extends TestCase
 
     }
 
+    public function test_change_status_must_not_be_allowed_from_completed_to_draft()
+    {
+        $status = \TaskManagement\Domain\Task\Status::fromInt(Status::COMPLETED);
+        $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidTaskStatusException::class);
+        $status->change(Status::DRAFT);
+    }
 
 }
