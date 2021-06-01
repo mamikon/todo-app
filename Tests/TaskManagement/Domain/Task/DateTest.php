@@ -11,4 +11,12 @@ class DateTest extends \PHPUnit\Framework\TestCase
         $this->expectException(\Error::class);
         $date = new \TaskManagement\Domain\Task\Date($dateTime);
     }
+
+    public function test_it_can_be_created_from_string()
+    {
+        $dateTime = new DateTimeImmutable();
+        $format   = "Y-m-d";
+        $date     = \TaskManagement\Domain\Task\Date::createFromString($dateTime->format($format));
+        $this->assertSame($dateTime->format($format), $date->toString($format));
+    }
 }
