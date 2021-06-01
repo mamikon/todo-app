@@ -64,7 +64,7 @@ class TaskServiceTest extends \PHPUnit\Framework\TestCase
         );
         $taskService->store($task);
 
-        $usersTasks = $taskService->getUsersTaskForGivenDate($user, $date);
+        $usersTasks = $taskService->getUserTasksForGivenDate($user, $date);
         $this->assertIsArray($usersTasks);
         $this->assertCount(1, $usersTasks);
         $task = $usersTasks[0];

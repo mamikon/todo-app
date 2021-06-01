@@ -25,8 +25,8 @@ class TaskService
     /**
      * @return Task[]
      */
-    public function getUsersTaskForGivenDate(User $user, Date $date): array
+    public function getUserTasksForGivenDate(User $user, Date $date): array
     {
-        return $this->repository->getUsersTaskForGivenDate($user, $date);
+        return $this->repository->getUserTasksForGivenDate($user, $date);
     }
 }
