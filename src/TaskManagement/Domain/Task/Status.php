@@ -19,7 +19,7 @@ class Status
         self::DRAFT => [self::COMPLETED, self::INCOMPLETE],
     ];
 
-    public function __construct(private int $status)
+    private function __construct(private int $status)
     {
 
     }
