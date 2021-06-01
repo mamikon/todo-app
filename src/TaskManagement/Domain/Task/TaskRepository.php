@@ -14,4 +14,6 @@ interface TaskRepository
      * @return Task[]
      */
     public function getUserTasksForGivenDate(User $user, Date $date): array;
+
+    public function update(Task $task): void;
 }

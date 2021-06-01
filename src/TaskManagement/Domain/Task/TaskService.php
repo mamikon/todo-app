@@ -29,4 +29,9 @@ class TaskService
     {
         return $this->repository->getUserTasksForGivenDate($user, $date);
     }
+
+    public function update(Task $task): void
+    {
+        $this->repository->update($task);
+    }
 }
