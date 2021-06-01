@@ -21,4 +21,12 @@ class TaskService
     {
         return $this->repository->getById($taskId);
     }
+
+    /**
+     * @return Task[]
+     */
+    public function getUsersTaskForGivenDate(User $user, Date $date): array
+    {
+        return $this->repository->getUsersTaskForGivenDate($user, $date);
+    }
 }
