@@ -26,5 +26,15 @@ class StatusTest extends TestCase
         $status = \TaskManagement\Domain\Task\Status::fromInt($randomInt);
     }
 
+    public function test_task_status_change_is_immutable()
+    {
+        $status    = \TaskManagement\Domain\Task\Status::fromInt(Status::DRAFT);
+        $newStatus = $status->change(Status::INCOMPLETE);
+        $this->assertNotSame($status->getValue(), $newStatus->getValue());
+        $this->assertSame(Status::DRAFT, $status->getValue());
+        $this->assertSame(Status::INCOMPLETE, $newStatus->getValue());
+
+    }
+
 
 }
