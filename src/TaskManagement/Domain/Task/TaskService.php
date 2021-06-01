@@ -22,14 +22,6 @@ class TaskService
         return $this->repository->getById($taskId);
     }
 
-    /**
-     * @return Task[]
-     */
-    public function getUserTasksForGivenDate(User $user, Date $date): array
-    {
-        return $this->repository->getUserTasksForGivenDate($user, $date);
-    }
-
     public function update(Task $task): void
     {
         $this->repository->update($task);
