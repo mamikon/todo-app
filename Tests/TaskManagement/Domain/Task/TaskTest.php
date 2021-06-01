@@ -10,13 +10,15 @@ class TaskTest extends \PHPUnit\Framework\TestCase
         $title       = \TaskManagement\Domain\Task\Title::fromString("title");
         $description = \TaskManagement\Domain\Task\Description::fromString("Description");
         $status      = \TaskManagement\Domain\Task\Status::fromInt(\TaskManagement\Domain\Task\Status::DRAFT);
+        $date        = \TaskManagement\Domain\Task\Date::create(new DateTimeImmutable());
 
         $task = \TaskManagement\Domain\Task\Task::create(
             taskId: $taskId,
             user: $user,
             title: $title,
             description: $description,
-            status: $status
+            status: $status,
+            date: $date
         );
 
         $this->assertSame($taskId, $task->getTaskId());
@@ -24,6 +26,7 @@ class TaskTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($title, $task->getTitle());
         $this->assertSame($description, $task->getDescription());
         $this->assertSame($status, $task->getStatus());
+        $this->assertSame($date, $task->getDate());
 
         $this->expectException(\Error::class);
         $task = new TaskManagement\Domain\Task\Task(
@@ -31,7 +34,8 @@ class TaskTest extends \PHPUnit\Framework\TestCase
             user: $user,
             title: $title,
             description: $description,
-            status: $status
+            status: $status,
+            date: $date
         );
 
     }
