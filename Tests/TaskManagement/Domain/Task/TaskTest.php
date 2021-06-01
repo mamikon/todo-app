@@ -39,4 +39,37 @@ class TaskTest extends \PHPUnit\Framework\TestCase
         );
 
     }
+
+    public function test_setters_can_be_used()
+    {
+        $taskId             = \TaskManagement\Domain\Task\TaskId::generate();
+        $user               = \TaskManagement\Domain\Task\User::fromString(\Ramsey\Uuid\Uuid::uuid4());
+        $title              = \TaskManagement\Domain\Task\Title::fromString("title");
+        $description        = \TaskManagement\Domain\Task\Description::fromString("Description");
+        $status             = \TaskManagement\Domain\Task\Status::fromInt(\TaskManagement\Domain\Task\Status::DRAFT);
+        $date               = \TaskManagement\Domain\Task\Date::create(new DateTimeImmutable());
+        $task               = \TaskManagement\Domain\Task\Task::create(
+            taskId: $taskId,
+            user: $user,
+            title: $title,
+            description: $description,
+            status: $status,
+            date: $date
+        );
+        $userUpdated        = \TaskManagement\Domain\Task\User::fromString(\Ramsey\Uuid\Uuid::uuid4());
+        $titleUpdated       = \TaskManagement\Domain\Task\Title::fromString("title updated");
+        $descriptionUpdated = \TaskManagement\Domain\Task\Description::fromString("Description updated");
+        $statusUpdated      = \TaskManagement\Domain\Task\Status::fromInt(\TaskManagement\Domain\Task\Status::INCOMPLETE);
+        $dateUpdated        = \TaskManagement\Domain\Task\Date::create(new DateTimeImmutable());
+        $task->setUser($userUpdated);
+        $task->setTitle($titleUpdated);
+        $task->setDescription($descriptionUpdated);
+        $task->setStatus($statusUpdated);
+        $task->setDate($dateUpdated);
+        $this->assertSame($task->getUser()->toString(), $userUpdated->toString());
+        $this->assertSame($task->getTitle()->toString(), $titleUpdated->toString());
+        $this->assertSame($task->getDescription()->toString(), $descriptionUpdated->toString());
+        $this->assertSame($task->getStatus()->getValue(), $statusUpdated->getValue());
+        $this->assertSame($task->getDate()->toString("m-d-Y H:i:s.u"), $dateUpdated->toString("m-d-Y H:i:s.u"));
+    }
 }
