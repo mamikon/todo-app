@@ -10,7 +10,8 @@ class StatusTest extends TestCase
 {
     public function test_task_can_be_created_from_int()
     {
-        $status = \TaskManagement\Domain\Task\Status::fromInt(\TaskManagement\Domain\Task\Status::INCOMPLETE);
+        $statusArray = \TaskManagement\Domain\Task\Status::getAvailableStatuses();
+        $status      = \TaskManagement\Domain\Task\Status::fromInt(current($statusArray));
         $this->assertInstanceOf(\TaskManagement\Domain\Task\Status::class, $status);
     }
 
@@ -22,5 +23,6 @@ class StatusTest extends TestCase
             $randomInt++;
         }
         $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidTaskStatusProvided::class);
+        $status = \TaskManagement\Domain\Task\Status::fromInt($randomInt);
     }
 }
