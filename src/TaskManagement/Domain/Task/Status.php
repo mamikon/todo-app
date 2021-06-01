@@ -41,4 +41,14 @@ class Status
     {
         return self::$availableStatuses;
     }
+
+    public function change(int $status): self
+    {
+        return self::fromInt($status);
+    }
+
+    public function getValue(): int
+    {
+        return $this->status;
+    }
 }
