@@ -8,18 +8,19 @@ class Task
 {
 
 
-    private function __construct(private TaskId $taskId, private User $user, private Title $title, private Description $description, private Status $status)
+    private function __construct(private TaskId $taskId, private User $user, private Title $title, private Description $description, private Status $status, private Date $date)
     {
     }
 
-    public static function create(TaskId $taskId, User $user, Title $title, Description $description, Status $status): self
+    public static function create(TaskId $taskId, User $user, Title $title, Description $description, Status $status, Date $date): self
     {
         return new self(
             taskId: $taskId,
             user: $user,
             title: $title,
             description: $description,
-            status: $status
+            status: $status,
+            date: $date
         );
     }
 
@@ -49,5 +50,10 @@ class Task
     public function getStatus(): Status
     {
         return $this->status;
+    }
+
+    public function getDate(): Date
+    {
+        return $this->date;
     }
 }
