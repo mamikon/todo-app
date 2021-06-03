@@ -7,13 +7,10 @@ class DbalTaskRepositoryIntegrationTest extends KernelTestCase
 
     private ?\Doctrine\DBAL\Connection $connection;
 
-    protected function setUp(): void
-    {
-        $kernel           = self::bootKernel();
-        $this->connection = $kernel->getContainer()->get('doctrine')->getConnection();
-    }
-
-    public function test_it_should_store_task_in_database()
+    /**
+     * @return \TaskManagement\Domain\Task\Task
+     */
+    public function createTask(): \TaskManagement\Domain\Task\Task
     {
         $taskId      = \TaskManagement\Domain\Task\TaskId::generate();
         $user        = \TaskManagement\Domain\Task\User::fromString(\Ramsey\Uuid\Uuid::uuid4());
@@ -30,6 +27,18 @@ class DbalTaskRepositoryIntegrationTest extends KernelTestCase
             status: $status,
             date: $date
         );
+        return $task;
+    }
+
+    protected function setUp(): void
+    {
+        $kernel           = self::bootKernel();
+        $this->connection = $kernel->getContainer()->get('doctrine')->getConnection();
+    }
+
+    public function test_it_should_store_task_in_database()
+    {
+        $task = $this->createTask();
 
         $dbalTaskRepository = new \TaskManagement\Infrastructure\Repository\DbalTaskRepository($this->connection);
         $dbalTaskRepository->store($task);
@@ -40,6 +49,20 @@ class DbalTaskRepositoryIntegrationTest extends KernelTestCase
         $this->assertEquals($result['status'], $task->getStatus()->getValue());
         $this->assertSame($result['date'], $task->getDate()->toString());
 
+    }
+
+    public function test_it_should_return_task_by_uuid()
+    {
+        $task               = $this->createTask();
+        $dbalTaskRepository = new \TaskManagement\Infrastructure\Repository\DbalTaskRepository($this->connection);
+        $dbalTaskRepository->store($task);
+        $result = $dbalTaskRepository->getById($task->getTaskId());
+        $this->assertSame($task->getTaskId()->toString(), $result->getTaskId()->toString());
+        $this->assertSame($task->getTitle()->toString(), $result->getTitle()->toString());
+        $this->assertSame($task->getDescription()->toString(), $result->getDescription()->toString());
+        $this->assertSame($task->getStatus()->getValue(), $result->getStatus()->getValue());
+        $this->expectException(\TaskManagement\Domain\Task\Exception\TaskNotFoundException::class);
+        $dbalTaskRepository->getById(\TaskManagement\Domain\Task\TaskId::generate());
     }
 
     protected function tearDown(): void
