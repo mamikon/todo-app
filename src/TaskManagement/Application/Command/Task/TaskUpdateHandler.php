@@ -6,6 +6,7 @@ namespace TaskManagement\Application\Command\Task;
 
 use TaskManagement\Domain\Task\Date;
 use TaskManagement\Domain\Task\Description;
+use TaskManagement\Domain\Task\Exception\TaskNotFoundException;
 use TaskManagement\Domain\Task\Status;
 use TaskManagement\Domain\Task\Task;
 use TaskManagement\Domain\Task\TaskId;
@@ -20,6 +21,9 @@ class TaskUpdateHandler
 
     }
 
+    /**
+     * @throws TaskNotFoundException
+     */
     public function __invoke(TaskUpdateCommand $command)
     {
         $task        = $this->taskService->getById(TaskId::fromString($command->getTaskId()));
