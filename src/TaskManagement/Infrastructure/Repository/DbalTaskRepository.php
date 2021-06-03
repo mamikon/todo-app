@@ -5,6 +5,7 @@ namespace TaskManagement\Infrastructure\Repository;
 
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Exception;
 use TaskManagement\Domain\Task\Date;
 use TaskManagement\Domain\Task\Description;
 use TaskManagement\Domain\Task\Exception\TaskNotFoundException;
@@ -37,7 +38,7 @@ class DbalTaskRepository implements TaskRepository
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      * @throws TaskNotFoundException
      * @throws \Exception
      */
@@ -63,7 +64,7 @@ class DbalTaskRepository implements TaskRepository
 
     /**
      * @return Task[]
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function getUserTasksForGivenDate(User $user, Date $date): array
     {
@@ -86,7 +87,7 @@ class DbalTaskRepository implements TaskRepository
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function update(Task $task): void
     {
