@@ -65,6 +65,7 @@ class DbalTaskRepository implements TaskRepository
     /**
      * @return Task[]
      * @throws Exception
+     * @throws \Exception
      */
     public function getUserTasksForGivenDate(User $user, Date $date): array
     {
