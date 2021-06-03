@@ -43,7 +43,10 @@ class DbalTaskRepository implements TaskRepository
      */
     public function getById(TaskId $taskId): Task
     {
-        $result = $this->connection->fetchAllAssociative("select * from tasks where uuid = ? limit 1", [$taskId->toString()]);
+        $result = $this->connection->fetchAllAssociative(
+            "select uuid, title, description, status, date, user_uuid from tasks where uuid = ? limit 1",
+            [$taskId->toString()]
+        );
         if (empty($result)) {
             throw new TaskNotFoundException(sprintf("Task with id %s not found", $taskId->toString()));
         }
@@ -60,10 +63,26 @@ class DbalTaskRepository implements TaskRepository
 
     /**
      * @return Task[]
+     * @throws \Doctrine\DBAL\Exception
      */
     public function getUserTasksForGivenDate(User $user, Date $date): array
     {
-        // TODO: Implement getUserTasksForGivenDate() method.
+        $result = $this->connection->fetchAllAssociative(
+            "select uuid, title, description, status, date, user_uuid from tasks where user_uuid = ? and date = ?",
+            [$user->toString(), $date->toString()]
+        );
+        return \array_map(function ($data) {
+            return Task::create(
+                taskId: TaskId::fromString($data['uuid']),
+                user: User::fromString($data['user_uuid']),
+                title: Title::fromString($data['title']),
+                description: Description::fromString($data['description']),
+                status: Status::fromInt(intval($data['status'])),
+                date: Date::create(new \DateTimeImmutable($data['date']))
+            );
+
+        }, $result);
+
     }
 
     public function update(Task $task): void

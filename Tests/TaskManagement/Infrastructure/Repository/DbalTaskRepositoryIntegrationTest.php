@@ -1,33 +1,31 @@
 <?php
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use TaskManagement\Domain\Task\Date;
+use TaskManagement\Domain\Task\Description;
+use TaskManagement\Domain\Task\Status;
+use TaskManagement\Domain\Task\Task;
+use TaskManagement\Domain\Task\TaskId;
+use TaskManagement\Domain\Task\Title;
+use TaskManagement\Domain\Task\User;
 
 class DbalTaskRepositoryIntegrationTest extends KernelTestCase
 {
 
     private ?\Doctrine\DBAL\Connection $connection;
 
-    /**
-     * @return \TaskManagement\Domain\Task\Task
-     */
-    public function createTask(): \TaskManagement\Domain\Task\Task
-    {
-        $taskId      = \TaskManagement\Domain\Task\TaskId::generate();
-        $user        = \TaskManagement\Domain\Task\User::fromString(\Ramsey\Uuid\Uuid::uuid4());
-        $title       = \TaskManagement\Domain\Task\Title::fromString("title");
-        $description = \TaskManagement\Domain\Task\Description::fromString("Description");
-        $status      = \TaskManagement\Domain\Task\Status::fromInt(\TaskManagement\Domain\Task\Status::DRAFT);
-        $date        = \TaskManagement\Domain\Task\Date::create(new DateTimeImmutable());
 
-        $task = \TaskManagement\Domain\Task\Task::create(
+    private function generateTask(string $userId, string $title, string $description, int $status, string $date): Task
+    {
+        $taskId = TaskId::generate();
+        return Task::create(
             taskId: $taskId,
-            user: $user,
-            title: $title,
-            description: $description,
-            status: $status,
-            date: $date
+            user: User::fromString($userId),
+            title: Title::fromString($title),
+            description: Description::fromString($description),
+            status: Status::fromInt($status),
+            date: Date::create(new DateTimeImmutable($date))
         );
-        return $task;
     }
 
     protected function setUp(): void
@@ -38,7 +36,13 @@ class DbalTaskRepositoryIntegrationTest extends KernelTestCase
 
     public function test_it_should_store_task_in_database()
     {
-        $task = $this->createTask();
+        $task = $this->generateTask(
+            \Ramsey\Uuid\Uuid::uuid4()->toString(),
+            "Title",
+            "Description",
+            \TaskManagement\Domain\Task\Status::DRAFT,
+            "2001-01-01 10:10:10"
+        );
 
         $dbalTaskRepository = new \TaskManagement\Infrastructure\Repository\DbalTaskRepository($this->connection);
         $dbalTaskRepository->store($task);
@@ -53,7 +57,14 @@ class DbalTaskRepositoryIntegrationTest extends KernelTestCase
 
     public function test_it_should_return_task_by_uuid()
     {
-        $task               = $this->createTask();
+        $task = $this->generateTask(
+            \Ramsey\Uuid\Uuid::uuid4()->toString(),
+            "Title",
+            "Description",
+            \TaskManagement\Domain\Task\Status::DRAFT,
+            "2001-01-01 10:10:10"
+        );
+
         $dbalTaskRepository = new \TaskManagement\Infrastructure\Repository\DbalTaskRepository($this->connection);
         $dbalTaskRepository->store($task);
         $result = $dbalTaskRepository->getById($task->getTaskId());
@@ -63,6 +74,28 @@ class DbalTaskRepositoryIntegrationTest extends KernelTestCase
         $this->assertSame($task->getStatus()->getValue(), $result->getStatus()->getValue());
         $this->expectException(\TaskManagement\Domain\Task\Exception\TaskNotFoundException::class);
         $dbalTaskRepository->getById(\TaskManagement\Domain\Task\TaskId::generate());
+    }
+
+    public function test_it_should_return_user_tasks_for_given_period()
+    {
+        $repository = new \TaskManagement\Infrastructure\Repository\DbalTaskRepository($this->connection);
+        $user1      = \Ramsey\Uuid\Uuid::uuid4()->toString();
+        $user2      = \Ramsey\Uuid\Uuid::uuid4()->toString();
+        $date1      = "2000-01-01 10:10:10";
+        $date2      = "2001-01-01 10:10:10";
+        $taskList[] = $this->generateTask($user1, "title", "description", Status::INCOMPLETE, $date1);
+        $taskList[] = $this->generateTask($user1, "title2", "description2", Status::COMPLETED, $date1);
+        $taskList[] = $this->generateTask($user2, "title", "description", Status::INCOMPLETE, $date1);
+        $taskList[] = $this->generateTask($user1, "title", "description", Status::INCOMPLETE, $date2);
+
+        foreach ($taskList as $task) {
+            $repository->store($task);
+        }
+
+        $tasks = $repository->getUserTasksForGivenDate(User::fromString($user1), Date::create(new DateTimeImmutable($date1)));
+        $this->assertIsArray($tasks);
+        $this->assertCount(2, $tasks);
+        $this->assertSame($tasks[0]->getUser()->toString(), $user1);
     }
 
     protected function tearDown(): void
