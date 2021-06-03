@@ -4,6 +4,8 @@
 namespace TaskManagement\Domain\Task;
 
 
+use TaskManagement\Domain\Task\Exception\TaskNotFoundException;
+
 class TaskService
 {
 
@@ -22,6 +24,9 @@ class TaskService
         return $this->repository->getById($taskId);
     }
 
+    /**
+     * @throws TaskNotFoundException
+     */
     public function update(Task $task): void
     {
         $this->repository->update($task);
