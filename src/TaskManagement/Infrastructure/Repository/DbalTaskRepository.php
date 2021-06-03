@@ -87,6 +87,13 @@ class DbalTaskRepository implements TaskRepository
 
     public function update(Task $task): void
     {
-        // TODO: Implement update() method.
+        $this->connection->update(self::TABLE, [
+            'user_uuid'   => $task->getUser()->toString(),
+            'title'       => $task->getTitle()->toString(),
+            'description' => $task->getDescription()->toString(),
+            'status'      => $task->getStatus()->getValue(),
+            'date'        => $task->getDate()->toString(),
+
+        ], ['uuid' => $task->getTaskId()->toString()]);
     }
 }

@@ -98,6 +98,27 @@ class DbalTaskRepositoryIntegrationTest extends KernelTestCase
         $this->assertSame($tasks[0]->getUser()->toString(), $user1);
     }
 
+    public function test_it_should_update_task()
+    {
+        $task = $this->generateTask(
+            \Ramsey\Uuid\Uuid::uuid4()->toString(),
+            "Title",
+            "Description",
+            \TaskManagement\Domain\Task\Status::DRAFT,
+            "2001-01-01 10:10:10"
+        );
+
+        $dbalTaskRepository = new \TaskManagement\Infrastructure\Repository\DbalTaskRepository($this->connection);
+        $dbalTaskRepository->store($task);
+        $task->setStatus(Status::fromInt(Status::COMPLETED));
+        $dbalTaskRepository->update($task);
+
+        $result = $dbalTaskRepository->getById($task->getTaskId());
+
+        $this->assertSame(Status::COMPLETED, $result->getStatus()->getValue());
+
+    }
+
     protected function tearDown(): void
     {
         parent::tearDown();
