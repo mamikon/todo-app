@@ -4,6 +4,8 @@
 namespace TaskManagement\Domain\Task;
 
 
+use TaskManagement\Domain\Task\Exception\TaskNotFoundException;
+
 interface TaskRepository
 {
     public function store(Task $task): void;
@@ -15,5 +17,8 @@ interface TaskRepository
      */
     public function getUserTasksForGivenDate(User $user, Date $date): array;
 
+    /**
+     * @throws TaskNotFoundException
+     */
     public function update(Task $task): void;
 }
