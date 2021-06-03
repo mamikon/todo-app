@@ -85,6 +85,9 @@ class DbalTaskRepository implements TaskRepository
 
     }
 
+    /**
+     * @throws \Doctrine\DBAL\Exception
+     */
     public function update(Task $task): void
     {
         $this->connection->update(self::TABLE, [
