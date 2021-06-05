@@ -20,9 +20,14 @@ services:
       - '../src/App/Entity/'
       - '../src/App/Kernel.php'
       - '../src/Tests/'
-
+  TaskManagement\:
+    resource: '../src/TaskManagement/'
   App\OpenApi\JwtDecorator:
     decorates: 'api_platform.openapi.factory'
     autoconfigure: false
+  TaskManagement\Application\Command\Task\TaskCreateHandler:
+    tags: [ messenger.message_handler ]
+  TaskManagement\Application\Command\Task\TaskUpdateHandler:
+    tags: [ messenger.message_handler ]
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
