@@ -14,6 +14,7 @@ security:
                 property: email
     firewalls:
         login:
+            pattern: ^/api/authentication_token$
             stateless: true
             json_login:
                 check_path: authentication_token
@@ -24,9 +25,9 @@ security:
         api:
             pattern: ^/api
             stateless: true
-            provider: app_user_provider
-            custom_authenticators:
-                - lexik_jwt_authentication.jwt_token_authenticator
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
