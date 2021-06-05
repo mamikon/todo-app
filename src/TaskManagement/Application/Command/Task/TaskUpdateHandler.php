@@ -40,7 +40,7 @@ class TaskUpdateHandler
         } else {
             $status = $task->getStatus();
         }
-
+        $task->getStatus()->check($status);
         $task = Task::create(
             taskId: $task->getTaskId(),
             user: $user,

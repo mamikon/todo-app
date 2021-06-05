@@ -5,15 +5,24 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-#[ApiResource(collectionOperations: [
+#[ApiResource(
+    collectionOperations: [
     'post' => [
         'method'            => 'post',
         'validation_groups' => ['Default', 'postValidation']
     ],
-])]
+    'get'],
+    itemOperations: [
+    'get' => [
+        "security" => "is_granted('TASK_VIEW', object)"
+    ],
+    'put' => [
+        "security" => "is_granted('TASK_EDIT', object)"
+    ]])]
 class Task
 {
     #[ApiProperty(
@@ -48,7 +57,8 @@ class Task
         default: "2000-01-20"
     )]
     private ?string $date = null;
-
+    #[Ignore]
+    private string $userUuid;
 
     public function getUuid(): string
     {
@@ -105,6 +115,17 @@ class Task
     public function setDate(string $date): void
     {
         $this->date = $date;
+    }
+
+    public function getUserUuid(): string
+    {
+        return $this->userUuid;
+    }
+
+
+    public function setUserUuid(string $userId): void
+    {
+        $this->userUuid = $userId;
     }
 
 }

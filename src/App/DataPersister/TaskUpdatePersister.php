@@ -8,11 +8,11 @@ use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use App\Entity\Task;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Security\Core\Security;
-use TaskManagement\Application\Command\Task\TaskCreateCommand;
+use TaskManagement\Application\Command\Task\TaskUpdateCommand;
+use TaskManagement\Domain\Task\Exception\InvalidTaskStatusException;
 
-class TaskCreatePersister implements ContextAwareDataPersisterInterface
+class TaskUpdatePersister implements ContextAwareDataPersisterInterface
 {
     public function __construct(private Security $security, private MessageBusInterface $messageBus)
     {
@@ -20,39 +20,33 @@ class TaskCreatePersister implements ContextAwareDataPersisterInterface
 
     public function supports($data, array $context = []): bool
     {
-        return $data instanceof Task && 'post' === ($context['collection_operation_name'] ?? false);
+        return $data instanceof Task && 'put' === ($context['item_operation_name'] ?? false);
     }
 
     /**
      * @param Task $data
      * @param array $context
-     * @return Task
+     * @return object|void
      * @throws \Exception
      */
-    public function persist($data, array $context = []): Task
+    public function persist($data, array $context = [])
     {
-
-        $task = new TaskCreateCommand(
-            user: $this->security->getUser()->getUuid(),
+        $task = new TaskUpdateCommand(
+            taskId: $data->getUuid(),
             title: $data->getTitle(),
             date: new \DateTimeImmutable($data->getDate()),
             description: $data->getDescription(),
             status: $data->getStatus()
         );
         try {
-            $result = $this->messageBus->dispatch($task);
+            $this->messageBus->dispatch($task);
         } catch (HandlerFailedException  $exception) {
             throw $exception->getPrevious();
         }
-        /** @var \TaskManagement\Domain\Task\Task $handledTask */
-        $handledTask = $result->last(HandledStamp::class)->getResult();
-        $data->setUuid($handledTask->getTaskId()->toString());
-        $data->setUserUuid($this->security->getUser()->getUuid());
         return $data;
     }
 
     public function remove($data, array $context = [])
     {
-        return $data;
     }
 }

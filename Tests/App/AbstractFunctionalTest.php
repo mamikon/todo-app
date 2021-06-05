@@ -27,11 +27,12 @@ abstract class AbstractFunctionalTest extends ApiTestCase
     /**
      * Use other credentials if needed.
      */
-    protected function getToken($body = []): string
+    protected function getToken($body = [], $force = false): string
     {
-        if ($this->token) {
+        if ($this->token && !$force) {
             return $this->token;
         }
+        $mail = rand() . 'test@example.com';
         if (empty($body)) {
             static::createClient()->request('POST', '/api/users', [
                 'headers' => [
@@ -39,7 +40,7 @@ abstract class AbstractFunctionalTest extends ApiTestCase
                 ],
 
                 'json' => [
-                    'email'    => 'test@example.com',
+                    'email'    => $mail,
                     'password' => '$3cr3tP4$$',
                 ]
             ]);
@@ -47,7 +48,7 @@ abstract class AbstractFunctionalTest extends ApiTestCase
         $response = static::createClient()->request('POST', '/api/authentication_token', [
             'headers' => ['Content-Type' => 'application/json'],
             'json'    => [
-                'email'    => 'test@example.com',
+                'email'    => $mail,
                 'password' => '$3cr3tP4$$',
             ],
         ]);

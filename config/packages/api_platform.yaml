@@ -1,4 +1,14 @@
 api_platform:
+  exception_to_status:
+    # The 4 following handlers are registered by default, keep those lines to prevent unexpected side effects
+    Symfony\Component\Serializer\Exception\ExceptionInterface: 400
+    ApiPlatform\Core\Exception\InvalidArgumentException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_BAD_REQUEST
+    ApiPlatform\Core\Exception\FilterValidationException: 400
+    Doctrine\ORM\OptimisticLockException: 409
+    # Validation exception
+    ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
+    #Domain Exceptions
+    TaskManagement\Domain\Task\Exception\InvalidTaskStatusException: 409
   mapping:
     paths: [ '%kernel.project_dir%/src/App/Entity' ]
   patch_formats:

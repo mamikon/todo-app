@@ -84,9 +84,9 @@ class Status
         if (isset(self::$statusRestrictions[$status->getValue()]) && in_array($this->status, self::$statusRestrictions[$status->getValue()])) {
             throw new InvalidTaskStatusException(
                 sprintf(
-                    "Status can't be changed from %d to %d.",
-                    $this->status,
-                    $status->getValue()
+                    "Status can't be changed from %s to %s.",
+                    self::getLabel($this->status),
+                    self::getLabel($status->getValue())
                 )
             );
         }
