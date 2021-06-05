@@ -24,7 +24,7 @@ class TaskUpdateHandler
     /**
      * @throws TaskNotFoundException
      */
-    public function __invoke(TaskUpdateCommand $command)
+    public function __invoke(TaskUpdateCommand $command): Task
     {
         $task        = $this->taskService->getById(TaskId::fromString($command->getTaskId()));
         $status      = $command->getStatus() !== null ? Status::fromInt($command->getStatus()) : $task->getStatus();
@@ -42,5 +42,6 @@ class TaskUpdateHandler
             date: $date
         );
         $this->taskService->update($task);
+        return $task;
     }
 }

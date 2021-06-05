@@ -20,7 +20,7 @@ class TaskCreateHandler
 
     }
 
-    public function __invoke(TaskCreateCommand $taskCreateCommand)
+    public function __invoke(TaskCreateCommand $taskCreateCommand): Task
     {
         $task = Task::create(
             taskId: TaskId::generate(),
@@ -30,5 +30,6 @@ class TaskCreateHandler
             status: Status::fromInt($taskCreateCommand->getStatus()),
             date: Date::create($taskCreateCommand->getDate()));
         $this->taskService->store($task);
+        return $task;
     }
 }
