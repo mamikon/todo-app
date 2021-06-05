@@ -8,7 +8,7 @@ api_platform:
     # Validation exception
     ApiPlatform\Core\Bridge\Symfony\Validator\Exception\ValidationException: !php/const Symfony\Component\HttpFoundation\Response::HTTP_UNPROCESSABLE_ENTITY
     #Domain Exceptions
-    TaskManagement\Domain\Task\Exception\InvalidTaskStatusException: 409
+    TaskManagement\Domain\Task\Exception\InvalidTaskStatusException: 422
   mapping:
     paths: [ '%kernel.project_dir%/src/App/Entity' ]
   patch_formats:

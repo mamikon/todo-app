@@ -65,6 +65,6 @@ class TaskUpdateTest extends AbstractFunctionalTest
         $client->request('PUT', 'api/tasks/' . $task->uuid, ['json' => [
             'status' => "draft",
         ]]);
-        $this->assertResponseStatusCodeSame(409);
+        $this->assertResponseStatusCodeSame(422);
     }
 }
