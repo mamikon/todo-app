@@ -22,12 +22,15 @@ class TaskCreateHandler
 
     public function __invoke(TaskCreateCommand $taskCreateCommand): Task
     {
-        $task = Task::create(
+        $status = is_string($taskCreateCommand->getStatus()) ?
+            Status::fromLabel($taskCreateCommand->getStatus()) :
+            Status::fromInt($taskCreateCommand->getStatus());
+        $task   = Task::create(
             taskId: TaskId::generate(),
             user: User::fromString($taskCreateCommand->getUser()),
             title: Title::fromString($taskCreateCommand->getTitle()),
             description: Description::fromString($taskCreateCommand->getDescription()),
-            status: Status::fromInt($taskCreateCommand->getStatus()),
+            status: $status,
             date: Date::create($taskCreateCommand->getDate()));
         $this->taskService->store($task);
         return $task;

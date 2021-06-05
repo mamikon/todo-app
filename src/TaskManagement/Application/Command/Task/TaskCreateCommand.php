@@ -8,7 +8,7 @@ use TaskManagement\Domain\Task\Status;
 
 class TaskCreateCommand
 {
-    public function __construct(private string $user, private string $title, private \DateTimeImmutable $date, private string $description = "", private int $status = Status::DRAFT)
+    public function __construct(private string $user, private string $title, private \DateTimeImmutable $date, private string $description = "", private int|string $status = Status::DRAFT)
     {
 
     }
@@ -37,7 +37,7 @@ class TaskCreateCommand
     }
 
 
-    public function getStatus(): int
+    public function getStatus(): int|string
     {
         return $this->status;
     }

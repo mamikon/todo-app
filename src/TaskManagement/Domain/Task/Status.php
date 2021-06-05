@@ -14,6 +14,11 @@ class Status
     const DRAFT      = 3;
 
     private static array $availableStatuses = [self::INCOMPLETE, self::COMPLETED, self::DRAFT];
+    private static array $statusLabels = [
+        self::INCOMPLETE => 'incomplete',
+        self::COMPLETED  => 'completed',
+        self::DRAFT      => 'draft',
+    ];
 
     private static array $statusRestrictions = [
         self::DRAFT => [self::COMPLETED, self::INCOMPLETE],
@@ -45,6 +50,33 @@ class Status
     public static function getAvailableStatuses(): array
     {
         return self::$availableStatuses;
+    }
+
+    public static function getLabel(int $statusIntVal): string
+    {
+        return self::$statusLabels[$statusIntVal] ?? throw new InvalidTaskStatusException(sprintf("Invalid status value provided(%s).", $statusIntVal));
+    }
+
+    private static function getIntValFromLabel(string $label): int
+    {
+        $list = \array_flip(self::$statusLabels);
+        return $list[$label] ??
+            throw  new InvalidTaskStatusException(
+                sprintf("Invalid status label provided(%s). Valid Labels Are %s",
+                    $label,
+                    implode(', ', self::$statusLabels)
+                )
+            );
+    }
+
+    public static function fromLabel(string $label): self
+    {
+        return new self(self::getIntValFromLabel($label));
+    }
+
+    public static function getStatusLabels(): array
+    {
+        return self::$statusLabels;
     }
 
     public function check(Status $status): void

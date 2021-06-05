@@ -47,4 +47,24 @@ class TaskCreateCommandTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($task->getDescription()->toString(), "description");
         $this->assertSame($task->getDate()->toString("Y-m-d"), $date->format("Y-m-d"));
     }
+
+    public function test_that_task_command_can_be_created_with_status_label()
+    {
+        require_once(__DIR__ . '/../../../Domain/Task/stubs/InMemoryRepository.php');
+        $repository  = new \TaskManagement\Domain\Task\stubs\InMemoryRepository();
+        $taskService = new \TaskManagement\Domain\Task\TaskService($repository);
+        $handler     = new \TaskManagement\Application\Command\Task\TaskCreateHandler($taskService);
+        $user        = \Ramsey\Uuid\Uuid::uuid4();
+        $date        = new DateTimeImmutable();
+        $command     = new \TaskManagement\Application\Command\Task\TaskCreateCommand(
+            user: $user->toString(),
+            title: "title",
+            date: $date,
+            description: "description",
+            status: \TaskManagement\Domain\Task\Status::getLabel(\TaskManagement\Domain\Task\Status::DRAFT)
+        );
+        $task        = $handler($command);
+        $this->assertInstanceOf(\TaskManagement\Domain\Task\Task::class, $task);
+
+    }
 }

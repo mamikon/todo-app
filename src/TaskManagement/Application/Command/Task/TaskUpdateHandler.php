@@ -27,11 +27,19 @@ class TaskUpdateHandler
     public function __invoke(TaskUpdateCommand $command): Task
     {
         $task        = $this->taskService->getById(TaskId::fromString($command->getTaskId()));
-        $status      = $command->getStatus() !== null ? Status::fromInt($command->getStatus()) : $task->getStatus();
         $user        = $command->getUser() !== null ? User::fromString($command->getUser()) : $task->getUser();
         $title       = $command->getTitle() !== null ? Title::fromString($command->getTitle()) : $task->getTitle();
         $date        = $command->getDate() !== null ? Date::create($command->getDate()) : $task->getDate();
         $description = $command->getDescription() !== null ? Description::fromString($command->getDescription()) : $task->getDescription();
+
+        $scalarStatus = $command->getStatus();
+        if (is_string($scalarStatus)) {
+            $status = Status::fromLabel($scalarStatus);
+        } elseif (is_int($scalarStatus)) {
+            $status = Status::fromInt($scalarStatus);
+        } else {
+            $status = $task->getStatus();
+        }
 
         $task = Task::create(
             taskId: $task->getTaskId(),

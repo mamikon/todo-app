@@ -42,4 +42,10 @@ class StatusTest extends TestCase
         $status = new Status(current($statusArray));
     }
 
+    public function test_it_can_be_created_from_string()
+    {
+        $status = \TaskManagement\Domain\Task\Status::fromLabel(Status::getLabel(Status::COMPLETED));
+        $this->assertInstanceOf(\TaskManagement\Domain\Task\Status::class, $status);
+    }
+
 }

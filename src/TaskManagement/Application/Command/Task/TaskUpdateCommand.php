@@ -12,7 +12,7 @@ class TaskUpdateCommand
         private ?string $title = null,
         private ?\DateTimeImmutable $date = null,
         private ?string $description = null,
-        private ?int $status = null)
+        private null|int|string $status = null)
     {
     }
 
@@ -41,7 +41,7 @@ class TaskUpdateCommand
         return $this->description;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): null|int|string
     {
         return $this->status;
     }
