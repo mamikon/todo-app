@@ -11,6 +11,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Symfony\Component\Security\Core\Security;
 use TaskManagement\Application\Command\Task\TaskCreateCommand;
+use Throwable;
 
 class TaskCreatePersister implements ContextAwareDataPersisterInterface
 {
@@ -26,7 +27,7 @@ class TaskCreatePersister implements ContextAwareDataPersisterInterface
     /**
      * @param Task $data
      *
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     public function persist($data, array $context = []): Task
     {
