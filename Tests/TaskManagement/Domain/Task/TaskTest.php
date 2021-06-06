@@ -39,7 +39,7 @@ class TaskTest extends TestCase
         $this->assertSame($date, $task->getDate());
 
         $this->expectException(\Error::class);
-        $task = new TaskManagement\Domain\Task\Task(
+        new TaskManagement\Domain\Task\Task(
             taskId: $taskId,
             user: $user,
             title: $title,

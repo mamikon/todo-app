@@ -14,6 +14,6 @@ class DescriptionTest extends TestCase
     public function testThatDescriptionMustBeCreatedViaNamedConstructor()
     {
         $this->expectException(\Error::class);
-        $description = new Description('test');
+        new Description('test');
     }
 }

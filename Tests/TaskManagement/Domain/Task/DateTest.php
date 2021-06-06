@@ -1,6 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
+use TaskManagement\Domain\Task\Date;
 
 class DateTest extends TestCase
 {
@@ -8,9 +9,9 @@ class DateTest extends TestCase
     {
         $dateTime = new DateTimeImmutable();
         $format   = 'Y-m-d';
-        $date     = \TaskManagement\Domain\Task\Date::create($dateTime);
+        $date     = Date::create($dateTime);
         $this->assertSame($dateTime->format($format), $date->toString($format));
         $this->expectException(\Error::class);
-        $date = new \TaskManagement\Domain\Task\Date($dateTime);
+        new Date($dateTime);
     }
 }

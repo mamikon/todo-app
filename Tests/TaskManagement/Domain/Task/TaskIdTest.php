@@ -22,6 +22,6 @@ class TaskIdTest extends TestCase
     public function testIfWrongUuidProvidedItWillThrowException()
     {
         $this->expectException(InvalidUuidException::class);
-        $taskId = TaskId::fromString('invalid');
+        TaskId::fromString('invalid');
     }
 }

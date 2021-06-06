@@ -37,7 +37,7 @@ class StatusTest extends TestCase
     {
         $statusArray = Status::getAvailableStatuses();
         $this->expectException(\Error::class);
-        $status = new Status(current($statusArray));
+        new Status(current($statusArray));
     }
 
     public function testItCanBeCreatedFromString()
