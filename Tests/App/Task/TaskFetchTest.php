@@ -40,7 +40,7 @@ class TaskFetchTest extends AbstractFunctionalTest
         $this->assertResponseStatusCodeSame(403);
     }
 
-    public function testItCantGetAllUserTasks()
+    public function testItCanGetAllUserTasks()
     {
         $client = $this->createClientWithCredentials();
         $this->createTask($client);
