@@ -36,6 +36,25 @@ class TaskQuery
 
     }
 
+    /**
+     * @return TaskDTO[]
+     */
+    public function getUserTasks(string $user): array
+    {
+        $taskList = $this->repository->getUserTasks(User::fromString($user));
+        return \array_map(function (Task $task) {
+            return new TaskDTO(taskId: $task->getTaskId()->toString(),
+                userId: $task->getUser()->toString(),
+                title: $task->getTitle()->toString(),
+                description: $task->getDescription()->toString(),
+                status: $task->getStatus()->getValue(),
+                date: $task->getDate()->toString()
+            );
+
+        }, $taskList);
+
+    }
+
     public function getTaskById(string $uuid): TaskDTO
     {
         $task = $this->repository->getById(TaskId::fromString($uuid));

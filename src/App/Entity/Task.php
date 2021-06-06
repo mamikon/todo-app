@@ -15,14 +15,32 @@ use Symfony\Component\Validator\Constraints as Assert;
         'method'            => 'post',
         'validation_groups' => ['Default', 'postValidation']
     ],
-    'get'],
+    'get'  => [
+        'method'          => 'get',
+        'openapi_context' => [
+            "parameters" => [
+                'date' => [
+                    'name'        => 'date',
+                    'in'          => 'query',
+                    'description' => 'Fetch tasks for given date. Possible values can be found [in php official documentation](https://www.php.net/manual/en/datetime.formats.php)',
+                    'required'    => false,
+                    'schema'      => [
+                        'type'    => 'string',
+                        'example' => 'today'
+                    ]
+                ]
+            ]
+        ]
+    ]],
     itemOperations: [
     'get' => [
         "security" => "is_granted('TASK_VIEW', object)"
     ],
     'put' => [
         "security" => "is_granted('TASK_EDIT', object)"
-    ]])]
+    ]],
+    attributes: ['pagination_enabled' => false],
+)]
 class Task
 {
     #[ApiProperty(

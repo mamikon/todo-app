@@ -9,7 +9,6 @@ use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
 use App\Entity\Task;
 use TaskManagement\Application\Query\TaskQuery;
 use TaskManagement\Domain\Task\Exception\TaskNotFoundException;
-use TaskManagement\Domain\Task\Status;
 
 class TaskItemProvider implements ItemDataProviderInterface, RestrictedDataProviderInterface
 {
@@ -21,14 +20,7 @@ class TaskItemProvider implements ItemDataProviderInterface, RestrictedDataProvi
     {
         try {
             $taskDto = $this->query->getTaskById($id);
-            $task    = new Task();
-            $task->setUuid($id);
-            $task->setUserUuid($taskDto->getUserId());
-            $task->setTitle($taskDto->getTitle());
-            $task->setDescription($taskDto->getDescription());
-            $task->setStatus(Status::getLabel($taskDto->getStatus()));
-            $task->setDate($taskDto->getDate());
-            return $task;
+            return TaskDtoToResourceAdapter::convert($taskDto);
         } catch (TaskNotFoundException $e) {
             return null;
         }

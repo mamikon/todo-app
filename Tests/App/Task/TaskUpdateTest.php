@@ -5,7 +5,6 @@ namespace App\Task;
 
 
 use App\AbstractFunctionalTest;
-use Symfony\Component\HttpFoundation\Response;
 use TaskManagement\Domain\Task\Status;
 
 class TaskUpdateTest extends AbstractFunctionalTest

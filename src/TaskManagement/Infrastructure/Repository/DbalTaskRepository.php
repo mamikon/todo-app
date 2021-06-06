@@ -101,4 +101,23 @@ class DbalTaskRepository implements TaskRepository
 
         ], ['uuid' => $task->getTaskId()->toString()]);
     }
+
+    public function getUserTasks(User $user): array
+    {
+        $result = $this->connection->fetchAllAssociative(
+            "select uuid, title, description, status, date, user_uuid from tasks where user_uuid = ?",
+            [$user->toString()]
+        );
+        return \array_map(function ($data) {
+            return Task::create(
+                taskId: TaskId::fromString($data['uuid']),
+                user: User::fromString($data['user_uuid']),
+                title: Title::fromString($data['title']),
+                description: Description::fromString($data['description']),
+                status: Status::fromInt(intval($data['status'])),
+                date: Date::create(new \DateTimeImmutable($data['date']))
+            );
+
+        }, $result);
+    }
 }

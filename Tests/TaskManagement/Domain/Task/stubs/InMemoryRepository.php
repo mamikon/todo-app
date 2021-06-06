@@ -47,4 +47,15 @@ class InMemoryRepository implements TaskRepository
             $this->tasks[$task->getTaskId()->toString()] = $task;
         }
     }
+
+    public function getUserTasks(User $user): array
+    {
+        $list = [];
+        foreach ($this->tasks as $task) {
+            if ($task->getUser()->toString() === $user->toString()) {
+                $list[] = $task;
+            }
+        }
+        return $list;
+    }
 }

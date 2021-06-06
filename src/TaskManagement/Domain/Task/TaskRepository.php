@@ -21,4 +21,6 @@ interface TaskRepository
      * @throws TaskNotFoundException
      */
     public function update(Task $task): void;
+
+    public function getUserTasks(User $user): array;
 }
