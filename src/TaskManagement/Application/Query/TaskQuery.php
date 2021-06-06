@@ -1,9 +1,9 @@
 <?php
 
-
 namespace TaskManagement\Application\Query;
 
-
+use function array_map;
+use DateTimeImmutable;
 use TaskManagement\Domain\Task\Date;
 use TaskManagement\Domain\Task\Task;
 use TaskManagement\Domain\Task\TaskId;
@@ -14,12 +14,12 @@ class TaskQuery
 {
     public function __construct(private TaskRepository $repository)
     {
-
     }
 
     private function taskDtoConverter(Task $task): TaskDTO
     {
-        return new TaskDTO(taskId: $task->getTaskId()->toString(),
+        return new TaskDTO(
+            taskId: $task->getTaskId()->toString(),
             userId: $task->getUser()->toString(),
             title: $task->getTitle()->toString(),
             description: $task->getDescription()->toString(),
@@ -31,13 +31,16 @@ class TaskQuery
     /**
      * @return TaskDTO[]
      */
-    public function getUserTasksForDate(string $user, \DateTimeImmutable $date): array
+    public function getUserTasksForDate(string $user, DateTimeImmutable $date): array
     {
         $taskList = $this->repository->getUserTasksForGivenDate(User::fromString($user), Date::create($date));
-        return \array_map(function (Task $task) {
-            return $this->taskDtoConverter($task);
-        }, $taskList);
 
+        return array_map(
+            function (Task $task) {
+                return $this->taskDtoConverter($task);
+            },
+            $taskList
+        );
     }
 
     /**
@@ -46,15 +49,19 @@ class TaskQuery
     public function getUserTasks(string $user): array
     {
         $taskList = $this->repository->getUserTasks(User::fromString($user));
-        return \array_map(function (Task $task) {
-            return $this->taskDtoConverter($task);
-        }, $taskList);
+
+        return array_map(
+            function (Task $task) {
+                return $this->taskDtoConverter($task);
+            },
+            $taskList
+        );
     }
 
     public function getTaskById(string $uuid): TaskDTO
     {
         $task = $this->repository->getById(TaskId::fromString($uuid));
-        return $this->taskDtoConverter($task);
 
+        return $this->taskDtoConverter($task);
     }
 }

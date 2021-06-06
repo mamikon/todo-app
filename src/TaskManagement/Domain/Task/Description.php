@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaskManagement\Domain\Task;
-
 
 class Description
 {

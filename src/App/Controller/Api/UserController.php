@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Controller\Api;
-
 
 use App\Entity\User;
 use Ramsey\Uuid\Uuid;
@@ -20,6 +18,7 @@ class UserController extends AbstractController
                 $data->getPassword()
             )
         );
+
         return $data;
     }
 }

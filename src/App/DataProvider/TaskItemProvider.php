@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\DataProvider;
-
 
 use ApiPlatform\Core\DataProvider\ItemDataProviderInterface;
 use ApiPlatform\Core\DataProvider\RestrictedDataProviderInterface;
@@ -20,6 +18,7 @@ class TaskItemProvider implements ItemDataProviderInterface, RestrictedDataProvi
     {
         try {
             $taskDto = $this->query->getTaskById($id);
+
             return TaskDtoToResourceAdapter::convert($taskDto);
         } catch (TaskNotFoundException $e) {
             return null;
@@ -28,6 +27,6 @@ class TaskItemProvider implements ItemDataProviderInterface, RestrictedDataProvi
 
     public function supports(string $resourceClass, string $operationName = null, array $context = []): bool
     {
-        return $resourceClass === Task::class;
+        return Task::class === $resourceClass;
     }
 }

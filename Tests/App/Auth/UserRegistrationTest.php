@@ -10,24 +10,28 @@ class UserRegistrationTest extends ApiTestCase
         self::bootKernel();
     }
 
-    public function test_it_should_register_user()
+    public function testItShouldRegisterUser()
     {
         $client = static::createClient();
-        $client->request('POST', '/api/users', [
-            'headers' => [
-                'content-type' => 'application/json',
-            ],
+        $client->request(
+            'POST',
+            '/api/users',
+            [
+                'headers' => [
+                    'content-type' => 'application/json',
+                ],
 
-            'body' => json_encode([
-                'email'    => 'admin@example.com',
-                'password' => '$3cr3t',
-            ])
-        ]);
+                'body' => json_encode(
+                    [
+                        'email'    => 'admin@example.com',
+                        'password' => '$3cr3t',
+                    ]
+                ),
+            ]);
         $this->assertResponseIsSuccessful();
         /** @var UserRepository $userRepository */
         $userRepository = static::getContainer()->get(UserRepository::class);
         $testUser       = $userRepository->findOneByEmail('admin@example.com');
         $this->assertTrue(Ramsey\Uuid\Uuid::isValid($testUser->getUuid()));
-
     }
 }

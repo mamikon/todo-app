@@ -1,20 +1,18 @@
 <?php
 
-
 namespace App\DataPersister;
-
 
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use App\Entity\Task;
+use DateTimeImmutable;
+use Exception;
 use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Security\Core\Security;
 use TaskManagement\Application\Command\Task\TaskUpdateCommand;
-use TaskManagement\Domain\Task\Exception\InvalidTaskStatusException;
 
 class TaskUpdatePersister implements ContextAwareDataPersisterInterface
 {
-    public function __construct(private Security $security, private MessageBusInterface $messageBus)
+    public function __construct(private MessageBusInterface $messageBus)
     {
     }
 
@@ -25,16 +23,15 @@ class TaskUpdatePersister implements ContextAwareDataPersisterInterface
 
     /**
      * @param Task $data
-     * @param array $context
-     * @return object|void
-     * @throws \Exception
+     *
+     * @throws Exception
      */
-    public function persist($data, array $context = [])
+    public function persist($data, array $context = []): Task
     {
         $task = new TaskUpdateCommand(
             taskId: $data->getUuid(),
             title: $data->getTitle(),
-            date: new \DateTimeImmutable($data->getDate()),
+            date: new DateTimeImmutable($data->getDate()),
             description: $data->getDescription(),
             status: $data->getStatus()
         );
@@ -43,6 +40,7 @@ class TaskUpdatePersister implements ContextAwareDataPersisterInterface
         } catch (HandlerFailedException  $exception) {
             throw $exception->getPrevious();
         }
+
         return $data;
     }
 

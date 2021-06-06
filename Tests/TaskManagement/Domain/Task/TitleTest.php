@@ -1,25 +1,27 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+use TaskManagement\Domain\Task\Exception\EmptyArgumentException;
+use TaskManagement\Domain\Task\Title;
 
-class TitleTest extends \PHPUnit\Framework\TestCase
+class TitleTest extends TestCase
 {
-    public function test_that_title_can_be_created_from_string()
+    public function testThatTitleCanBeCreatedFromString()
     {
-        $titleString = "Test";
-        $title       = \TaskManagement\Domain\Task\Title::fromString($titleString);
+        $titleString = 'Test';
+        $title       = Title::fromString($titleString);
         $this->assertSame($titleString, $title->toString());
     }
 
-    public function test_that_empty_title_will_throw_exception()
+    public function testThatEmptyTitleWillThrowException()
     {
-        $this->expectException(\TaskManagement\Domain\Task\Exception\EmptyArgumentException::class);
-        \TaskManagement\Domain\Task\Title::fromString("");
+        $this->expectException(EmptyArgumentException::class);
+        Title::fromString('');
     }
 
-    public function test_title_must_be_created_via_named_constructor()
+    public function testTitleMustBeCreatedViaNamedConstructor()
     {
         $this->expectException(\Error::class);
-        $user = new \TaskManagement\Domain\Task\Title("test");
+        new Title('test');
     }
-
 }

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaskManagement\Domain\Task;
-
 
 use TaskManagement\Domain\Task\Exception\EmptyArgumentException;
 
@@ -10,7 +8,6 @@ class Title
 {
     private function __construct(private string $title)
     {
-
     }
 
     /**
@@ -18,7 +15,7 @@ class Title
      */
     public static function fromString(string $titleString): self
     {
-        if ($titleString === "") {
+        if ('' === $titleString) {
             throw new EmptyArgumentException("Task Title can't be created from empty string");
         }
 

@@ -1,8 +1,8 @@
 <?php
 
-
 namespace TaskManagement\Application\Command\Task;
 
+use DateTimeImmutable;
 
 class TaskUpdateCommand
 {
@@ -10,10 +10,10 @@ class TaskUpdateCommand
         private string $taskId,
         private ?string $user = null,
         private ?string $title = null,
-        private ?\DateTimeImmutable $date = null,
+        private ?DateTimeImmutable $date = null,
         private ?string $description = null,
-        private null|int|string $status = null)
-    {
+        private null|int|string $status = null
+    ) {
     }
 
     public function getTaskId(): string
@@ -31,7 +31,7 @@ class TaskUpdateCommand
         return $this->title;
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate(): ?DateTimeImmutable
     {
         return $this->date;
     }

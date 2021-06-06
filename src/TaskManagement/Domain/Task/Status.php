@@ -1,17 +1,18 @@
 <?php
 
-
 namespace TaskManagement\Domain\Task;
 
-
+use function array_flip;
+use function implode;
+use function in_array;
+use function sprintf;
 use TaskManagement\Domain\Task\Exception\InvalidTaskStatusException;
 
 class Status
 {
-
-    const INCOMPLETE = 1;
-    const COMPLETED  = 2;
-    const DRAFT      = 3;
+    public const INCOMPLETE = 1;
+    public const COMPLETED  = 2;
+    public const DRAFT      = 3;
 
     private static array $availableStatuses = [self::INCOMPLETE, self::COMPLETED, self::DRAFT];
     private static array $statusLabels = [
@@ -26,7 +27,6 @@ class Status
 
     private function __construct(private int $status)
     {
-
     }
 
     /**
@@ -37,9 +37,9 @@ class Status
         if (!in_array($status, self::$availableStatuses)) {
             throw new InvalidTaskStatusException(
                 sprintf(
-                    "Provided status(%d) is invalid. Available statuses are %s",
+                    'Provided status(%d) is invalid. Available statuses are %s',
                     $status,
-                    implode(",", self::$availableStatuses)
+                    implode(',', self::$availableStatuses)
                 )
             );
         }
@@ -54,15 +54,19 @@ class Status
 
     public static function getLabel(int $statusIntVal): string
     {
-        return self::$statusLabels[$statusIntVal] ?? throw new InvalidTaskStatusException(sprintf("Invalid status value provided(%s).", $statusIntVal));
+        return self::$statusLabels[$statusIntVal] ?? throw new InvalidTaskStatusException(
+                sprintf('Invalid status value provided(%s).', $statusIntVal)
+            );
     }
 
     private static function getIntValFromLabel(string $label): int
     {
-        $list = \array_flip(self::$statusLabels);
+        $list = array_flip(self::$statusLabels);
+
         return $list[$label] ??
-            throw  new InvalidTaskStatusException(
-                sprintf("Invalid status label provided(%s). Valid Labels Are %s",
+            throw new InvalidTaskStatusException(
+                sprintf(
+                    'Invalid status label provided(%s). Valid Labels Are %s',
                     $label,
                     implode(', ', self::$statusLabels)
                 )

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\DataProvider;
-
 
 use App\Entity\Task;
 use TaskManagement\Application\Query\TaskDTO;
@@ -14,7 +12,7 @@ class TaskDtoToResourceAdapter
     {
     }
 
-    public static function convert(TaskDTO $taskDTO)
+    public static function convert(TaskDTO $taskDTO): Task
     {
         $task = new Task();
         $task->setUuid($taskDTO->getTaskId());
@@ -23,6 +21,7 @@ class TaskDtoToResourceAdapter
         $task->setDescription($taskDTO->getDescription());
         $task->setStatus(Status::getLabel($taskDTO->getStatus()));
         $task->setDate($taskDTO->getDate());
+
         return $task;
     }
 }

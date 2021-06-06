@@ -1,12 +1,9 @@
 <?php
 
-
 namespace TaskManagement\Domain\Task\Exception;
 
-
-use \InvalidArgumentException;
+use InvalidArgumentException;
 
 class InvalidTaskStatusException extends InvalidArgumentException
 {
-
 }

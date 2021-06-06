@@ -1,24 +1,28 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
+use TaskManagement\Domain\Task\Exception\InvalidUuidException;
+use TaskManagement\Domain\Task\User;
 
-class UserTest extends \PHPUnit\Framework\TestCase
+class UserTest extends TestCase
 {
-    public function test_user_can_be_created_from_string()
+    public function testUserCanBeCreatedFromString()
     {
-        $uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();
-        $user = \TaskManagement\Domain\Task\User::fromString($uuid);
+        $uuid = Uuid::uuid4()->toString();
+        $user = User::fromString($uuid);
         $this->assertSame($user->toString(), $uuid);
     }
 
-    public function test_user_must_be_created_via_named_constructor()
+    public function testUserMustBeCreatedViaNamedConstructor()
     {
         $this->expectException(\Error::class);
-        $user = new \TaskManagement\Domain\Task\User("test");
+        new User('test');
     }
 
-    public function test_if_invalid_uuid_provided_for_user_must_throw_exception()
+    public function testIfInvalidUuidProvidedForUserMustThrowException()
     {
-        $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidUuidException::class);
-        $user = \TaskManagement\Domain\Task\User::fromString("invalid-uuid");
+        $this->expectException(InvalidUuidException::class);
+        User::fromString('invalid-uuid');
     }
 }

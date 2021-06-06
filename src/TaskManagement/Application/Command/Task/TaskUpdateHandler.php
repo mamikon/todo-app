@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaskManagement\Application\Command\Task;
-
 
 use TaskManagement\Domain\Task\Date;
 use TaskManagement\Domain\Task\Description;
@@ -18,7 +16,6 @@ class TaskUpdateHandler
 {
     public function __construct(private TaskService $taskService)
     {
-
     }
 
     /**
@@ -27,10 +24,14 @@ class TaskUpdateHandler
     public function __invoke(TaskUpdateCommand $command): Task
     {
         $task = $this->taskService->getById(TaskId::fromString($command->getTaskId()));
-        $task->setUser($command->getUser() !== null ? User::fromString($command->getUser()) : $task->getUser());
-        $task->setTitle($command->getTitle() !== null ? Title::fromString($command->getTitle()) : $task->getTitle());
-        $task->setDate($command->getDate() !== null ? Date::create($command->getDate()) : $task->getDate());
-        $task->setDescription($command->getDescription() !== null ? Description::fromString($command->getDescription()) : $task->getDescription());
+        $task->setUser(null !== $command->getUser() ? User::fromString($command->getUser()) : $task->getUser());
+        $task->setTitle(null !== $command->getTitle() ? Title::fromString($command->getTitle()) : $task->getTitle());
+        $task->setDate(null !== $command->getDate() ? Date::create($command->getDate()) : $task->getDate());
+        $task->setDescription(
+            null !== $command->getDescription() ? Description::fromString(
+                $command->getDescription()
+            ) : $task->getDescription()
+        );
 
         $scalarStatus = $command->getStatus();
         if (is_string($scalarStatus)) {
@@ -42,6 +43,7 @@ class TaskUpdateHandler
         }
         $task->setStatus($status);
         $this->taskService->update($task);
+
         return $task;
     }
 }

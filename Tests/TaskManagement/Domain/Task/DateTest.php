@@ -1,11 +1,13 @@
 <?php
 
-class DateTest extends \PHPUnit\Framework\TestCase
+use PHPUnit\Framework\TestCase;
+
+class DateTest extends TestCase
 {
-    public function test_date_can_be_created_from_date_time_immutable_and_only_via_named_constructor()
+    public function testDateCanBeCreatedFromDateTimeImmutableAndOnlyViaNamedConstructor()
     {
         $dateTime = new DateTimeImmutable();
-        $format   = "Y-m-d";
+        $format   = 'Y-m-d';
         $date     = \TaskManagement\Domain\Task\Date::create($dateTime);
         $this->assertSame($dateTime->format($format), $date->toString($format));
         $this->expectException(\Error::class);

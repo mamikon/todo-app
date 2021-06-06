@@ -1,51 +1,48 @@
 <?php
 
-
 namespace TaskManagement\Domain\Task;
 
-
 use PHPUnit\Framework\TestCase;
+use TaskManagement\Domain\Task\Exception\InvalidTaskStatusException;
 
 class StatusTest extends TestCase
 {
-    public function test_task_can_be_created_from_int()
+    public function testTaskCanBeCreatedFromInt()
     {
-        $statusArray = \TaskManagement\Domain\Task\Status::getAvailableStatuses();
-        $status      = \TaskManagement\Domain\Task\Status::fromInt(current($statusArray));
-        $this->assertInstanceOf(\TaskManagement\Domain\Task\Status::class, $status);
+        $statusArray = Status::getAvailableStatuses();
+        $status      = Status::fromInt(current($statusArray));
+        $this->assertInstanceOf(Status::class, $status);
     }
 
-    public function test_not_declared_status_must_throw_exception()
+    public function testNotDeclaredStatusMustThrowException()
     {
-        $statusArray = \TaskManagement\Domain\Task\Status::getAvailableStatuses();
+        $statusArray = Status::getAvailableStatuses();
         $randomInt   = \rand(10000, 999999);
         while (in_array($randomInt, $statusArray)) {
-            $randomInt++;
+            ++$randomInt;
         }
-        $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidTaskStatusException::class);
-        $status = \TaskManagement\Domain\Task\Status::fromInt($randomInt);
+        $this->expectException(InvalidTaskStatusException::class);
+        Status::fromInt($randomInt);
     }
 
-
-    public function test_status_can_validate_change()
+    public function testStatusCanValidateChange()
     {
-        $status      = \TaskManagement\Domain\Task\Status::fromInt(Status::COMPLETED);
-        $draftStatus = \TaskManagement\Domain\Task\Status::fromInt(Status::DRAFT);
-        $this->expectException(\TaskManagement\Domain\Task\Exception\InvalidTaskStatusException::class);
+        $status      = Status::fromInt(Status::COMPLETED);
+        $draftStatus = Status::fromInt(Status::DRAFT);
+        $this->expectException(InvalidTaskStatusException::class);
         $status->check($draftStatus);
     }
 
-    public function test_status_must_be_created_via_named_constructor()
+    public function testStatusMustBeCreatedViaNamedConstructor()
     {
-        $statusArray = \TaskManagement\Domain\Task\Status::getAvailableStatuses();
+        $statusArray = Status::getAvailableStatuses();
         $this->expectException(\Error::class);
         $status = new Status(current($statusArray));
     }
 
-    public function test_it_can_be_created_from_string()
+    public function testItCanBeCreatedFromString()
     {
-        $status = \TaskManagement\Domain\Task\Status::fromLabel(Status::getLabel(Status::COMPLETED));
-        $this->assertInstanceOf(\TaskManagement\Domain\Task\Status::class, $status);
+        $status = Status::fromLabel(Status::getLabel(Status::COMPLETED));
+        $this->assertInstanceOf(Status::class, $status);
     }
-
 }

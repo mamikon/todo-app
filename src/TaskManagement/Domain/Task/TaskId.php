@@ -1,17 +1,15 @@
 <?php
 
-
 namespace TaskManagement\Domain\Task;
 
-
 use Ramsey\Uuid\Uuid;
+use function sprintf;
 use TaskManagement\Domain\Task\Exception\InvalidUuidException;
 
 class TaskId
 {
     private function __construct(private string $id)
     {
-
     }
 
     public static function generate(): self

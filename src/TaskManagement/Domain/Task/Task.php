@@ -1,19 +1,27 @@
 <?php
 
-
 namespace TaskManagement\Domain\Task;
-
 
 class Task
 {
-
-
-    private function __construct(private TaskId $taskId, private User $user, private Title $title, private Description $description, private Status $status, private Date $date)
-    {
+    private function __construct(
+        private TaskId $taskId,
+        private User $user,
+        private Title $title,
+        private Description $description,
+        private Status $status,
+        private Date $date
+    ) {
     }
 
-    public static function create(TaskId $taskId, User $user, Title $title, Description $description, Status $status, Date $date): self
-    {
+    public static function create(
+        TaskId $taskId,
+        User $user,
+        Title $title,
+        Description $description,
+        Status $status,
+        Date $date
+    ): self {
         return new self(
             taskId: $taskId,
             user: $user,
@@ -29,18 +37,15 @@ class Task
         return $this->taskId;
     }
 
-
     public function getUser(): User
     {
         return $this->user;
     }
 
-
     public function getTitle(): Title
     {
         return $this->title;
     }
-
 
     public function getDescription(): Description
     {
@@ -67,19 +72,16 @@ class Task
         $this->title = $title;
     }
 
-
     public function setStatus(Status $status): void
     {
         $this->status->check($status);
         $this->status = $status;
     }
 
-
     public function setDescription(Description $description): void
     {
         $this->description = $description;
     }
-
 
     public function setDate(Date $date): void
     {

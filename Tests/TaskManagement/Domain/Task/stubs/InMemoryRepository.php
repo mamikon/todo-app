@@ -1,8 +1,6 @@
 <?php
 
-
 namespace TaskManagement\Domain\Task\stubs;
-
 
 use TaskManagement\Domain\Task\Date;
 use TaskManagement\Domain\Task\Task;
@@ -38,6 +36,7 @@ class InMemoryRepository implements TaskRepository
                 $list[] = $task;
             }
         }
+
         return $list;
     }
 
@@ -56,6 +55,7 @@ class InMemoryRepository implements TaskRepository
                 $list[] = $task;
             }
         }
+
         return $list;
     }
 }

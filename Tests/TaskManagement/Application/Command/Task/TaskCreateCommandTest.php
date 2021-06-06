@@ -1,70 +1,79 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
+use TaskManagement\Application\Command\Task\TaskCreateCommand;
+use TaskManagement\Application\Command\Task\TaskCreateHandler;
+use TaskManagement\Domain\Task\Date;
+use TaskManagement\Domain\Task\Status;
+use TaskManagement\Domain\Task\stubs\InMemoryRepository;
+use TaskManagement\Domain\Task\Task;
+use TaskManagement\Domain\Task\TaskService;
+use TaskManagement\Domain\Task\User;
 
-class TaskCreateCommandTest extends \PHPUnit\Framework\TestCase
+class TaskCreateCommandTest extends TestCase
 {
-    public function test_command_can_return_fields()
+    public function testCommandCanReturnFields()
     {
-        $user    = \Ramsey\Uuid\Uuid::uuid4();
+        $user    = Uuid::uuid4();
         $date    = new DateTimeImmutable();
-        $command = new \TaskManagement\Application\Command\Task\TaskCreateCommand(
+        $command = new TaskCreateCommand(
             user: $user->toString(),
-            title: "title",
+            title: 'title',
             date: $date,
-            description: "description",
-            status: \TaskManagement\Domain\Task\Status::INCOMPLETE
+            description: 'description',
+            status: Status::INCOMPLETE
         );
 
         $this->assertSame($command->getDate()->getTimestamp(), $date->getTimestamp());
-        $this->assertSame($command->getStatus(), \TaskManagement\Domain\Task\Status::INCOMPLETE);
+        $this->assertSame($command->getStatus(), Status::INCOMPLETE);
         $this->assertSame($command->getTitle(), 'title');
         $this->assertSame($command->getDescription(), 'description');
         $this->assertSame($command->getUser(), $user->toString());
     }
 
-    public function test_task_create_handler_can_create_task()
+    public function testTaskCreateHandlerCanCreateTask()
     {
-        require_once(__DIR__ . '/../../../Domain/Task/stubs/InMemoryRepository.php');
-        $repository  = new \TaskManagement\Domain\Task\stubs\InMemoryRepository();
-        $taskService = new \TaskManagement\Domain\Task\TaskService($repository);
-        $handler     = new \TaskManagement\Application\Command\Task\TaskCreateHandler($taskService);
-        $user        = \Ramsey\Uuid\Uuid::uuid4();
+        require_once __DIR__ . '/../../../Domain/Task/stubs/InMemoryRepository.php';
+        $repository  = new InMemoryRepository();
+        $taskService = new TaskService($repository);
+        $handler     = new TaskCreateHandler($taskService);
+        $user        = Uuid::uuid4();
         $date        = new DateTimeImmutable();
-        $command     = new \TaskManagement\Application\Command\Task\TaskCreateCommand(
+        $command     = new TaskCreateCommand(
             user: $user->toString(),
-            title: "title",
+            title: 'title',
             date: $date,
-            description: "description",
-            status: \TaskManagement\Domain\Task\Status::INCOMPLETE
+            description: 'description',
+            status: Status::INCOMPLETE
         );
         $handler($command);
-        $usersTasks = $repository->getUserTasksForGivenDate(\TaskManagement\Domain\Task\User::fromString($user->toString()), \TaskManagement\Domain\Task\Date::create($date));
+        $usersTasks = $repository->getUserTasksForGivenDate(User::fromString($user->toString()), Date::create($date));
         $this->assertIsArray($usersTasks);
         $this->assertCount(1, $usersTasks);
         $task = $usersTasks[0];
         $this->assertSame($task->getUser()->toString(), $user->toString());
-        $this->assertSame($task->getTitle()->toString(), "title");
-        $this->assertSame($task->getDescription()->toString(), "description");
-        $this->assertSame($task->getDate()->toString("Y-m-d"), $date->format("Y-m-d"));
+        $this->assertSame($task->getTitle()->toString(), 'title');
+        $this->assertSame($task->getDescription()->toString(), 'description');
+        $this->assertSame($task->getDate()->toString('Y-m-d'), $date->format('Y-m-d'));
     }
 
-    public function test_that_task_command_can_be_created_with_status_label()
+    public function testThatTaskCommandCanBeCreatedWithStatusLabel()
     {
-        require_once(__DIR__ . '/../../../Domain/Task/stubs/InMemoryRepository.php');
-        $repository  = new \TaskManagement\Domain\Task\stubs\InMemoryRepository();
-        $taskService = new \TaskManagement\Domain\Task\TaskService($repository);
-        $handler     = new \TaskManagement\Application\Command\Task\TaskCreateHandler($taskService);
-        $user        = \Ramsey\Uuid\Uuid::uuid4();
+        require_once __DIR__ . '/../../../Domain/Task/stubs/InMemoryRepository.php';
+        $repository  = new InMemoryRepository();
+        $taskService = new TaskService($repository);
+        $handler     = new TaskCreateHandler($taskService);
+        $user        = Uuid::uuid4();
         $date        = new DateTimeImmutable();
-        $command     = new \TaskManagement\Application\Command\Task\TaskCreateCommand(
+        $command     = new TaskCreateCommand(
             user: $user->toString(),
-            title: "title",
+            title: 'title',
             date: $date,
-            description: "description",
-            status: \TaskManagement\Domain\Task\Status::getLabel(\TaskManagement\Domain\Task\Status::DRAFT)
+            description: 'description',
+            status: Status::getLabel(Status::DRAFT)
         );
         $task        = $handler($command);
-        $this->assertInstanceOf(\TaskManagement\Domain\Task\Task::class, $task);
-
+        $this->assertInstanceOf(Task::class, $task);
     }
 }

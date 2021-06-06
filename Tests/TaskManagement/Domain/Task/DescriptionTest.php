@@ -1,17 +1,19 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+use TaskManagement\Domain\Task\Description;
 
-class DescriptionTest extends \PHPUnit\Framework\TestCase
+class DescriptionTest extends TestCase
 {
-    public function test_that_description_can_be_created_from_string()
+    public function testThatDescriptionCanBeCreatedFromString()
     {
-        $description = \TaskManagement\Domain\Task\Description::fromString("test");
-        $this->assertSame("test", $description->toString());
+        $description = Description::fromString('test');
+        $this->assertSame('test', $description->toString());
     }
 
-    public function test_that_description_must_be_created_via_named_constructor()
+    public function testThatDescriptionMustBeCreatedViaNamedConstructor()
     {
         $this->expectException(\Error::class);
-        $description = new \TaskManagement\Domain\Task\Description("test");
+        $description = new Description('test');
     }
 }

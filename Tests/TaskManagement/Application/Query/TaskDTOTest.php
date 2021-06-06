@@ -1,17 +1,19 @@
 <?php
 
-
+use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
 use TaskManagement\Application\Query\TaskDTO;
 use TaskManagement\Domain\Task\Status;
 
-class TaskDTOTest extends \PHPUnit\Framework\TestCase
+class TaskDTOTest extends TestCase
 {
-    public function test_task_dto_returns_expected_result()
+    public function testTaskDtoReturnsExpectedResult()
     {
-        $user    = \Ramsey\Uuid\Uuid::uuid4()->toString();
-        $taskId  = \Ramsey\Uuid\Uuid::uuid4()->toString();
-        $date    = "2000-01-01 10:10:10";
-        $taskDTO = new TaskDTO(taskId: $taskId,
+        $user    = Uuid::uuid4()->toString();
+        $taskId  = Uuid::uuid4()->toString();
+        $date    = '2000-01-01 10:10:10';
+        $taskDTO = new TaskDTO(
+            taskId: $taskId,
             userId: $user,
             title: 'title',
             description: 'description',
