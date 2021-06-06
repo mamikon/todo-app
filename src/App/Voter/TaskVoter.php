@@ -11,11 +11,7 @@ class TaskVoter extends Voter
 {
     protected function supports(string $attribute, $subject): bool
     {
-        if (!$subject instanceof Task) {
-            return false;
-        }
-
-        return true;
+        return $subject instanceof Task;
     }
 
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
