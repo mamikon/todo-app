@@ -19,7 +19,7 @@ class InMemoryRepository implements TaskRepository
 
     public function store(Task $task): void
     {
-        $this->tasks[$task->getTaskId()->toString()] = $task;
+        $this->tasks[$task->getTaskId()->toString()] = clone $task;
     }
 
     public function getById(TaskId $taskId): Task
@@ -44,7 +44,7 @@ class InMemoryRepository implements TaskRepository
     public function update(Task $task): void
     {
         if (isset($this->tasks[$task->getTaskId()->toString()])) {
-            $this->tasks[$task->getTaskId()->toString()] = $task;
+            $this->tasks[$task->getTaskId()->toString()] = clone $task;
         }
     }
 
