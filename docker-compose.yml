@@ -3,6 +3,8 @@ volumes:
   persistent:
 services:
   nginx:
+    depends_on:
+      - fpm
     build:
       context: ./docker
       dockerfile: Dockerfile-nginx
